@@ -3,7 +3,7 @@
  * Handles clock, tweaks panel, and API data fetching
  */
 
-// ─── Clock ──────────────────────────────────────────────
+// ─── Clock & Greeting ──────────────────────────────────
 function updateClock() {
     const now = new Date();
     document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour12: false });
@@ -43,25 +43,78 @@ function changeColor(color) {
     }
 })();
 
-// ─── API Data Fetching (Placeholder — will be implemented) ──
+// ─── Stock Data Fetching & DOM Updates ──────────────────
 async function fetchStockData() {
     try {
         const response = await fetch('/api/stocks');
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const data = await response.json();
-        // TODO: Update DOM with real stock data
-        console.log('Stock data:', data);
+        updateStockCards(data.stocks);
+        updateTicker(data.stocks);
     } catch (error) {
         console.error('Failed to fetch stock data:', error);
     }
 }
 
-// Fetch data on page load (will be replaced with real API calls)
+function updateStockCards(stocks) {
+    // Map symbols to DOM elements
+    const symbolMap = {
+        'SPX': { priceEl: 'spx-price', changeEl: 'spx-change' },
+        'IXIC': { priceEl: 'nasdaq-price', changeEl: 'nasdaq-change' },
+        'BTC': { priceEl: 'btc-price', changeEl: 'btc-change' },
+        'ETH': { priceEl: 'eth-price', changeEl: 'eth-change' }
+    };
+
+    stocks.forEach(stock => {
+        // Find matching symbol in map (case-insensitive)
+        const entry = Object.entries(symbolMap).find(([key]) => key.toUpperCase() === stock.symbol);
+        if (!entry) return;
+
+        const [symbol, elements] = entry;
+        const { priceEl, changeEl } = elements;
+
+        // Update price
+        const priceElEl = document.getElementById(priceEl);
+        if (priceElEl) {
+            const formattedPrice = stock.symbol.startsWith('$') 
+                ? `$${stock.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                : stock.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            priceElEl.innerHTML = `${formattedPrice} <span class="stat-change ${stock.percentChange >= 0 ? 'up' : 'down'}">${stock.percentChange >= 0 ? '+' : ''}${stock.percentChange.toFixed(2)}%</span>`;
+        }
+
+        // Update sparkline if available
+        const sparkEl = document.getElementById(`${symbol.toLowerCase()}-spark`);
+        if (sparkEl && stock.sparkline.length > 0) {
+            sparkEl.innerHTML = '';
+            const maxPrice = Math.max(...stock.sparkline);
+            stock.sparkline.forEach(price => {
+                const bar = document.createElement('div');
+                bar.className = 'spark-bar';
+                bar.style.height = `${(price / maxPrice) * 100}%`;
+                sparkEl.appendChild(bar);
+            });
+        }
+    });
+}
+
+function updateTicker(stocks) {
+    const tickerEl = document.getElementById('stock-ticker');
+    if (!tickerEl) return;
+
+    tickerEl.innerHTML = stocks.map(stock => {
+        const direction = stock.percentChange >= 0 ? '+' : '';
+        return `<span class="ticker-item">${stock.symbol} ${direction}${stock.percentChange.toFixed(2)}%</span>`;
+    }).join('');
+}
+
+// ─── Initialize ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Jarvis Dashboard initialized');
     
-    // Placeholder: fetch stock data every 60 seconds
-    setInterval(fetchStockData, 60000);
-    
-    // Initial fetch
+    // Fetch stock data on page load
     fetchStockData();
+    
+    // Auto-refresh every 60 seconds (Finnhub free tier limit)
+    setInterval(fetchStockData, 60 * 1000);
 });

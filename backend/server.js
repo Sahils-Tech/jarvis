@@ -12,16 +12,14 @@ app.use(express.json());
 // Serve static files from frontend/
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// API Routes (placeholder — will be implemented feature by feature)
+// API Routes (implemented feature by feature)
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Stock tickers route (coming in next iteration)
-app.get('/api/stocks', (req, res) => {
-    // TODO: Implement with free API (Alpha Vantage / Finnhub)
-    res.json({ message: 'Stock data endpoint — coming soon' });
-});
+// Stock tickers route (LIVE)
+const stocksRouter = require('./routes/stocks');
+app.use('/api/stocks', stocksRouter);
 
 // Weather route (future)
 app.get('/api/weather', (req, res) => {
