@@ -1,0 +1,22 @@
+{
+  "name": "jarvis-dashboard",
+  "version": "0.1.0",
+  "description": "Personal AI command center dashboard",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "test": "echo \"No tests configured yet\" && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": ["dashboard", "jarvis", "hud", "stocks"],
+  "author": "Sahil Virani",
+  "license": "MIT"
+}

@@ -1,0 +1,239 @@
+:root {
+    --bg: #050810;
+    --accent: #00d4ff;
+    --text: #e0f7fa;
+    --muted: #4a6b75;
+    --border: rgba(0, 212, 255, 0.2);
+    --speed: 8s;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Scanline overlay */
+body::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* Centered Hero Header */
+.hero-header {
+    text-align: center;
+    padding: 30px 20px 15px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0, 212, 255, 0.03);
+    position: relative;
+}
+
+.greeting { 
+    color: var(--accent); 
+    font-size: 1.8rem; 
+    letter-spacing: 4px; 
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+.clock { 
+    font-size: 1.2rem; 
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* Main Grid Layout */
+.dashboard {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 300px 1fr 340px;
+    gap: 2px;
+    overflow: hidden;
+}
+
+/* Sidebar - Enhanced Stats */
+.sidebar {
+    background: rgba(0, 212, 255, 0.02);
+    border-right: 1px solid var(--border);
+    padding: 30px 20px;
+    overflow-y: auto;
+}
+
+.stat-card {
+    background: rgba(0, 212, 255, 0.03);
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+}
+
+.stat-label { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.stat-value { font-size: 1.8rem; font-weight: 700; display: flex; align-items: baseline; }
+.stat-change { font-size: 1rem; margin-left: 8px; }
+.up { color: #00ff88; }
+.down { color: #ff4d4d; }
+
+/* Sparkline (CSS-only mini chart) */
+.sparkline {
+    position: absolute;
+    bottom: 10px; right: 15px;
+    width: 60px; height: 25px;
+    display: flex; align-items: flex-end; gap: 2px;
+}
+.spark-bar { width: 4px; background: var(--accent); opacity: 0.5; border-radius: 2px; }
+
+/* Center Stage - Background Ring + Feed */
+.center-stage {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Large Background Ring */
+.ring-container {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px; height: 450px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+}
+
+.ring-1 { 
+    width: 350px; height: 350px; top: 50px; left: 50px; 
+    animation: spin var(--speed) linear infinite; border-style: dashed; opacity: 0.15; 
+}
+.ring-2 { 
+    width: 400px; height: 400px; top: 25px; left: 25px; 
+    animation: spin-reverse calc(var(--speed) * 1.5) linear infinite; border-width: 2px; opacity: 0.1; 
+}
+.ring-3 { 
+    width: 300px; height: 300px; top: 75px; left: 75px; 
+    animation: pulse var(--speed) ease-in-out infinite; border-width: 2px; opacity: 0.12; 
+}
+
+/* Ambient glow behind ring */
+.ring-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+/* Feed Cards - positioned above ring */
+.feed-section { 
+    flex: 1; 
+    padding: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.card {
+    background: rgba(5, 8, 16, 0.85);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+
+.card-title { color: var(--accent); font-family: 'Share Tech Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+.card-time { font-size: 0.8rem; color: var(--muted); }
+
+.item { margin-bottom: 12px; padding-left: 15px; border-left: 2px solid rgba(0, 212, 255, 0.3); }
+.item:last-child { margin-bottom: 0; }
+.headline { font-weight: 500; font-size: 1.1rem; margin-bottom: 4px; }
+.meta { font-size: 0.85rem; color: var(--muted); }
+
+/* Right Panel - Enhanced */
+.right-panel {
+    background: rgba(0, 212, 255, 0.02);
+    border-left: 1px solid var(--border);
+    padding: 30px 20px;
+    overflow-y: auto;
+}
+
+.section-title { color: var(--accent); font-family: 'Share Tech Mono', monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+/* CSS Chart Placeholder */
+.chart-container {
+    height: 180px; border: 1px solid var(--border); margin-bottom: 25px;
+    padding: 10px; position: relative; background: rgba(0,212,255,0.02);
+}
+.chart-line {
+    position: absolute; bottom: 10px; left: 10px; right: 10px; height: 2px; background: var(--accent); opacity: 0.3;
+}
+.chart-bars { display: flex; align-items: flex-end; justify-content: space-between; height: 100%; padding: 0 5px; }
+.chart-bar { width: 12%; background: var(--accent); opacity: 0.6; border-radius: 4px 4px 0 0; }
+
+/* World Cup Mini Table */
+.standings-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.85rem; }
+.standings-table th { text-align: left; color: var(--accent); font-family: 'Share Tech Mono', monospace; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.standings-table td { padding: 6px 0; border-bottom: 1px solid rgba(0,212,255,0.1); }
+.standings-table tr:last-child td { border-bottom: none; }
+
+/* Events */
+.event-card {
+    background: rgba(0, 212, 255, 0.03); border: 1px solid var(--border);
+    padding: 15px; margin-bottom: 10px; border-radius: 6px;
+    border-left: 3px solid var(--accent);
+}
+.event-card.urgent { border-left-color: #ffb700; }
+
+/* Ticker */
+.ticker-wrap { background: rgba(0, 212, 255, 0.03); border-top: 1px solid var(--border); padding: 10px 0; overflow: hidden; }
+.ticker { display: inline-block; white-space: nowrap; animation: ticker 30s linear infinite; }
+.ticker-item { display: inline-block; padding: 0 2rem; font-family: 'Share Tech Mono', monospace; }
+.up { color: #00ff88; }
+.down { color: #ff4d4d; }
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+@keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+/* Tweaks */
+.tweaks-toggle { position: fixed; bottom: 20px; right: 20px; background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; cursor: pointer; font-family: 'Share Tech Mono', monospace; z-index: 1000; }
+.tweaks { position: fixed; bottom: 20px; right: 80px; background: rgba(5, 8, 16, 0.95); border: 1px solid var(--accent); padding: 15px; font-family: 'Share Tech Mono', monospace; display: none; }
+.tweaks.visible { display: block; }
+.tweaks label { display: block; margin-bottom: 5px; color: var(--accent); font-size: 0.8rem; }
+.tweaks select { background: transparent; border: 1px solid var(--muted); color: var(--text); padding: 4px; width: 100%; margin-bottom: 10px; }
