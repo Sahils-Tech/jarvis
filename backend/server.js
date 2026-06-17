@@ -21,16 +21,20 @@ app.get('/api/health', (req, res) => {
 const stocksRouter = require('./routes/stocks');
 app.use('/api/stocks', stocksRouter);
 
+// Chat route (JARVIS AI Assistant)
+const chatRouter = require('./routes/chat');
+app.use('/api/chat', chatRouter);
+
 // Weather route (future)
 app.get('/api/weather', (req, res) => {
     // TODO: Implement with OpenWeatherMap free tier
-    res.json({ message: 'Weather endpoint — coming soon' });
+    res.json({ message: 'Weather endpoint - coming soon' });
 });
 
 // Sports route (future)
 app.get('/api/sports', (req, res) => {
     // TODO: Implement with ESPN / TheSportsDB free tier
-    res.json({ message: 'Sports endpoint — coming soon' });
+    res.json({ message: 'Sports endpoint - coming soon' });
 });
 
 // Catch-all: serve index.html for any other route (SPA support)
