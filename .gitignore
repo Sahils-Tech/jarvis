@@ -1,23 +1,5 @@
-# Dependencies
+# Token files (never commit these)
+.gh_token*
+
+# Node modules
 node_modules/
-
-# Environment & config (keep API keys private)
-.env
-config/settings.json
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-
-# Cache & logs
-data/cache/*
-!data/cache/.gitkeep
-logs/
-
-# Build output (if we add a build step later)
-dist/
-build/

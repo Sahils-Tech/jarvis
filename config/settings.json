@@ -1,0 +1,50 @@
+{
+  "app": {
+    "name": "Jarvis Dashboard",
+    "version": "0.1.0",
+    "port": 3000,
+    "theme": {
+      "accentColor": "#00d4ff",
+      "darkMode": true
+    }
+  },
+  "dataSources": {
+    "stocks": {
+      "provider": "finnhub",
+      "apiKey": "d8pdqtpr01qgoi5iievgd8pdqtpr01qgoi5iif00",
+      "enabled": true,
+      "symbols": [
+        "AAPL",
+        "TSLA",
+        "NVDA",
+        "MSFT",
+        "AMZN",
+        "META"
+      ]
+    },
+    "weather": {
+      "provider": "openweathermap",
+      "apiKey": "",
+      "enabled": false,
+      "city": ""
+    },
+    "sports": {
+      "provider": "thesportsdb",
+      "apiKey": "",
+      "enabled": false,
+      "leagues": [
+        "nba",
+        "epl"
+      ]
+    },
+    "news": {
+      "provider": "hermes-cron",
+      "enabled": true,
+      "cronJobId": "19571646f93f"
+    }
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 300
+  }
+}
